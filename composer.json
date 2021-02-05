@@ -1,5 +1,5 @@
 {
-    "name": "babenkoivan/elastic-migrations",
+    "name": "panytsch/elastic-migrations-laravel",
     "description": "Elasticsearch migrations for Laravel",
     "keywords": [
         "laravel",
@@ -14,6 +14,10 @@
         {
             "name": "Ivan Babenko",
             "email": "babenko.i.a@gmail.com"
+        },
+        {
+            "name": "Roman Panasiuk",
+            "email": "gfyroman@gmail.com"
         }
     ],
     "autoload": {
