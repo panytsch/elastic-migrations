@@ -7,7 +7,6 @@ use ElasticAdapter\Indices\IndexManager;
 use ElasticAdapter\Indices\Mapping;
 use ElasticAdapter\Indices\Settings;
 use ElasticMigrations\IndexManagerInterface;
-use function ElasticMigrations\prefix_index_name;
 
 class IndexManagerAdapter implements IndexManagerInterface
 {
@@ -23,7 +22,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function create(string $indexName, ?callable $modifier = null): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         if (isset($modifier)) {
             $mapping = new Mapping();
@@ -43,7 +42,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function createIfNotExists(string $indexName, ?callable $modifier = null): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         if (!$this->indexManager->exists($prefixedIndexName)) {
             $this->create($indexName, $modifier);
@@ -54,7 +53,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function putMapping(string $indexName, callable $modifier): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         $mapping = new Mapping();
         $modifier($mapping);
@@ -65,7 +64,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function putSettings(string $indexName, callable $modifier): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         $settings = new Settings();
         $modifier($settings);
@@ -76,7 +75,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function putSettingsHard(string $indexName, callable $modifier): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         $this->indexManager->close($prefixedIndexName);
         $this->putSettings($indexName, $modifier);
@@ -87,7 +86,7 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function drop(string $indexName): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         $this->indexManager->drop($prefixedIndexName);
 
@@ -96,12 +95,17 @@ class IndexManagerAdapter implements IndexManagerInterface
 
     public function dropIfExists(string $indexName): IndexManagerInterface
     {
-        $prefixedIndexName = prefix_index_name($indexName);
+        $prefixedIndexName = $this->prefixIndexName($indexName);
 
         if ($this->indexManager->exists($prefixedIndexName)) {
             $this->drop($indexName);
         }
 
         return $this;
+    }
+
+    private function prefixIndexName(string $indexName): string
+    {
+        return config('elastic.migrations.index_name_prefix') . $indexName;
     }
 }

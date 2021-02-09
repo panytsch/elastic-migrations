@@ -32,6 +32,19 @@ The current version of Elastic Migrations has been tested with the following con
 * Elasticsearch 7.x
 * Laravel 6.x-8.x
 
+## Fork changes
+
+This specific forked version doesn't need MySQL to save migrations results. You may use Elasticsearch only. To do this  you just need:
+Set environment variables 
+```bash
+SAVE_MIGRATIONS_TO_ELASTIC=true
+MIGRATIONS_INDEX=name_of_index_to_store_migrations_result
+```
+
+OR
+
+change this configs in file ```elastic.migrations.php```
+
 ## Installation
 
 The library can be installed via Composer:
