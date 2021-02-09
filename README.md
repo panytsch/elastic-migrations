@@ -15,6 +15,7 @@ Elasticsearch migrations for Laravel allow you to easily modify and share indice
 ## Contents
 
 * [Compatibility](#compatibility)
+* [Fork changes](#fork-changes) 
 * [Installation](#installation) 
 * [Configuration](#configuration)
 * [Writing Migrations](#writing-migrations)
@@ -31,6 +32,35 @@ The current version of Elastic Migrations has been tested with the following con
 * PHP 7.2-7.4
 * Elasticsearch 7.x
 * Laravel 6.x-8.x
+
+## Fork changes
+
+This specific forked version doesn't need MySQL to save migrations results. You may use Elasticsearch only. To do this  you just need:
+Set environment variables 
+```bash
+SAVE_MIGRATIONS_TO_ELASTIC=true
+MIGRATIONS_INDEX=name_of_index_to_store_migrations_result
+```
+
+OR
+
+change this configs in file ```elastic.migrations.php```
+
+After this you have to create this elastic index (will be automated in future versions) with mapping:
+```json
+{
+    "mappings" : {
+        "properties" : {
+            "batch" : {
+                "type" : "integer"
+            },
+            "migration" : {
+                "type" : "keyword"
+            }
+        }
+    }
+}
+```
 
 ## Installation
 

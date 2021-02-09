@@ -5,6 +5,7 @@ namespace ElasticMigrations;
 use ElasticMigrations\Factories\MigrationFactory;
 use ElasticMigrations\Filesystem\MigrationFile;
 use ElasticMigrations\Filesystem\MigrationStorage;
+use ElasticMigrations\Repositories\MigrationElasticRepository;
 use ElasticMigrations\Repositories\MigrationRepository;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
@@ -30,11 +31,14 @@ class Migrator implements ReadinessInterface
 
     public function __construct(
         MigrationRepository $migrationRepository,
+        MigrationElasticRepository $elasticRepository,
         MigrationStorage $migrationStorage,
         MigrationFactory $migrationFactory
     ) {
         $this->migrationStorage = $migrationStorage;
-        $this->migrationRepository = $migrationRepository;
+        $this->migrationRepository = config('elastic.migrations.save_migrations_to_elastic')
+            ? $elasticRepository
+            : $migrationRepository;
         $this->migrationFactory = $migrationFactory;
     }
 
