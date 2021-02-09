@@ -15,6 +15,7 @@ Elasticsearch migrations for Laravel allow you to easily modify and share indice
 ## Contents
 
 * [Compatibility](#compatibility)
+* [Fork changes](#fork-changes) 
 * [Installation](#installation) 
 * [Configuration](#configuration)
 * [Writing Migrations](#writing-migrations)
@@ -44,6 +45,22 @@ MIGRATIONS_INDEX=name_of_index_to_store_migrations_result
 OR
 
 change this configs in file ```elastic.migrations.php```
+
+After this you have to create this elastic index (will be automated in future versions) with mapping:
+```json
+{
+    "mappings" : {
+        "properties" : {
+            "batch" : {
+                "type" : "integer"
+            },
+            "migration" : {
+                "type" : "keyword"
+            }
+        }
+    }
+}
+```
 
 ## Installation
 
